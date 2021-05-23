@@ -327,7 +327,7 @@ class CoordsConverter:
     ###
     def utm_to_dm(self):
         try:
-            easting, northing, zone_number, zone_letter = self.dlg.lineEdit_9.text(), self.dlg.lineEdit_12.text(), self.dlg.lineEdit_7.text(), self.dlg.lineEdit_11.text()
+            easting, northing, zone_number, zone_letter = self.dlg.lineEdit_9.text(), self.dlg.lineEdit_12.text(), int(self.dlg.comboBox.currentText()), str(self.dlg.comboBox_2.currentText())
             
             geo_lat, geo_long = to_latlon(float(easting), float(northing), int(zone_number), zone_letter)
             
@@ -340,8 +340,6 @@ class CoordsConverter:
         
 
     def clear_utm_to_dm(self):
-        self.dlg.lineEdit_7.clear()
-        self.dlg.lineEdit_11.clear()
         self.dlg.lineEdit_12.clear()
         self.dlg.lineEdit_9.clear()
         self.dlg.lineEdit_10.clear()
@@ -357,7 +355,7 @@ class CoordsConverter:
     ### 
     def utm_to_dms(self):
         try:
-            easting, northing, zone_number, zone_letter = self.dlg.lineEdit_33.text(), self.dlg.lineEdit_34.text(), self.dlg.lineEdit_35.text(), self.dlg.lineEdit_36.text()
+            easting, northing, zone_number, zone_letter = self.dlg.lineEdit_33.text(), self.dlg.lineEdit_34.text(), int(self.dlg.comboBox_4.currentText()), str(self.dlg.comboBox_3.currentText())
             
             lat, lon = to_latlon(float(easting), float(northing), int(zone_number), zone_letter)
 
@@ -378,8 +376,6 @@ class CoordsConverter:
     def clear_utm_to_dms(self):
         self.dlg.lineEdit_33.clear()
         self.dlg.lineEdit_34.clear()
-        self.dlg.lineEdit_35.clear() 
-        self.dlg.lineEdit_36.clear()
         self.dlg.lineEdit_38.clear()
         self.dlg.lineEdit_37.clear()
         self.dlg.lineEdit_40.clear()
