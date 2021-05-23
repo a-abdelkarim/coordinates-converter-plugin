@@ -31,8 +31,8 @@ from .resources import *
 from .coords_converter_dialog import CoordsConverterDialog
 import os.path
 
-from .models.conversion import from_latlon, to_latlon
-from .models.CoordsConverter import CoordsConverter as coordsConverter
+from .models.conversion import from_latlon, to_latlon, dm_to_dms, dms_to_dm
+
 
 
 class CoordsConverter:
@@ -256,13 +256,15 @@ class CoordsConverter:
             geo_long = self.dlg.lineEdit_2.text()
 
             easting, northing, zone_number, zone_letter = from_latlon(float(geo_lat), float(geo_long))
-
+            
             self.dlg.lineEdit_3.setText(str(easting))
             self.dlg.lineEdit_4.setText(str(northing))
             self.dlg.lineEdit_5.setText(str(zone_number))
             self.dlg.lineEdit_6.setText(str(zone_letter))
         except Exception as e:
             print(e)
+
+        
 
     def clear_dm_to_utm(self):
         self.dlg.lineEdit.clear()
@@ -283,18 +285,24 @@ class CoordsConverter:
     # START DM to DMS
     ###
     def dm_to_dms(self):
-        latitude = self.dlg.lineEdit_25.text()
-        longtude = self.dlg.lineEdit_26.text()
+        try:
+            latitude = self.dlg.lineEdit_25.text()
+            longtude = self.dlg.lineEdit_26.text()
 
-        lat, lon = coordsConverter.dm_to_dms(self, float(latitude), float(longtude))
+            lat, lon = dm_to_dms(float(latitude), float(longtude))
+            
+            self.dlg.lineEdit_27.setText(str(lat[0]))
+            self.dlg.lineEdit_28.setText(str(lat[1]))
+            self.dlg.lineEdit_29.setText(str(lat[2]))
 
-        self.dlg.lineEdit_27.setText(str(lat[0]))
-        self.dlg.lineEdit_28.setText(str(lat[1]))
-        self.dlg.lineEdit_29.setText(str(lat[2]))
-
-        self.dlg.lineEdit_31.setText(str(lon[0]))
-        self.dlg.lineEdit_30.setText(str(lon[1]))
-        self.dlg.lineEdit_32.setText(str(lon[2]))
+            self.dlg.lineEdit_31.setText(str(lon[0]))
+            self.dlg.lineEdit_30.setText(str(lon[1]))
+            self.dlg.lineEdit_32.setText(str(lon[2]))
+        except Exception as e:
+            print(e)
+            
+        
+        
 
     def clear_dm_to_dms(self):
         self.dlg.lineEdit_25.clear()
@@ -318,12 +326,18 @@ class CoordsConverter:
     # START UTM to DM
     ###
     def utm_to_dm(self):
-        easting, northing, zone_number, zone_letter = self.dlg.lineEdit_9.text(), self.dlg.lineEdit_12.text(), self.dlg.lineEdit_7.text(), self.dlg.lineEdit_11.text()
+        try:
+            easting, northing, zone_number, zone_letter = self.dlg.lineEdit_9.text(), self.dlg.lineEdit_12.text(), self.dlg.lineEdit_7.text(), self.dlg.lineEdit_11.text()
+            
+            geo_lat, geo_long = to_latlon(float(easting), float(northing), int(zone_number), zone_letter)
+            
+            self.dlg.lineEdit_10.setText(str(geo_lat))
+            self.dlg.lineEdit_8.setText(str(geo_long))
+        except Exception as e:
+            print(e)
+            
         
-        geo_lat, geo_long = to_latlon(float(easting), float(northing), int(zone_number), zone_letter)
-
-        self.dlg.lineEdit_10.setText(str(geo_lat))
-        self.dlg.lineEdit_8.setText(str(geo_long))
+        
 
     def clear_utm_to_dm(self):
         self.dlg.lineEdit_7.clear()
@@ -342,19 +356,24 @@ class CoordsConverter:
     # START UTM to DMS
     ### 
     def utm_to_dms(self):
-        easting, northing, zone_number, zone_letter = self.dlg.lineEdit_33.text(), self.dlg.lineEdit_34.text(), self.dlg.lineEdit_35.text(), self.dlg.lineEdit_36.text()
+        try:
+            easting, northing, zone_number, zone_letter = self.dlg.lineEdit_33.text(), self.dlg.lineEdit_34.text(), self.dlg.lineEdit_35.text(), self.dlg.lineEdit_36.text()
+            
+            lat, lon = to_latlon(float(easting), float(northing), int(zone_number), zone_letter)
+
+            dms_lat, dms_lon = dm_to_dms(float(lat), float(lon))
         
-        lat, lon = to_latlon(float(easting), float(northing), int(zone_number), zone_letter)
+                
+            self.dlg.lineEdit_38.setText(str(dms_lat[0]))
+            self.dlg.lineEdit_37.setText(str(dms_lat[1]))
+            self.dlg.lineEdit_40.setText(str(dms_lat[2]))
 
-        dms_lat, dms_lon = coordsConverter.dm_to_dms(self, float(lat), float(lon))
-
-        self.dlg.lineEdit_38.setText(str(dms_lat[0]))
-        self.dlg.lineEdit_37.setText(str(dms_lat[1]))
-        self.dlg.lineEdit_40.setText(str(dms_lat[2]))
-
-        self.dlg.lineEdit_41.setText(str(dms_lon[0]))
-        self.dlg.lineEdit_39.setText(str(dms_lon[1]))
-        self.dlg.lineEdit_42.setText(str(dms_lon[2]))
+            self.dlg.lineEdit_41.setText(str(dms_lon[0]))
+            self.dlg.lineEdit_39.setText(str(dms_lon[1]))
+            self.dlg.lineEdit_42.setText(str(dms_lon[2]))
+        except Exception as e:
+            print(e)
+        
 
     def clear_utm_to_dms(self):
         self.dlg.lineEdit_33.clear()
@@ -380,24 +399,30 @@ class CoordsConverter:
     # START DMS to UTM
     ###
     def dms_to_utm(self):
-        lat = [self.dlg.lineEdit_47.text(), self.dlg.lineEdit_45.text(), self.dlg.lineEdit_48.text()]
-        for i in lat:
-            float(i)
+        try:
+            lat = [self.dlg.lineEdit_47.text(), self.dlg.lineEdit_45.text(), self.dlg.lineEdit_48.text()]
+            for i in lat:
+                float(i)
 
-        lon = [self.dlg.lineEdit_46.text(), self.dlg.lineEdit_43.text(), self.dlg.lineEdit_44.text()]
-        for i in lon:
-            float(i)
+            lon = [self.dlg.lineEdit_46.text(), self.dlg.lineEdit_43.text(), self.dlg.lineEdit_44.text()]
+            for i in lon:
+                float(i)
+        
 
-        # convert from dms to dd
-        lat, lon = coordsConverter.dms_to_dm(self, lat, lon)
+            # convert from dms to dd
+            lat, lon = dms_to_dm(lat, lon)
 
-        # convert from dd to utm
-        easting, northing, zone_number, zone_letter = from_latlon(float(lat), float(lon))
+            # convert from dd to utm
+            easting, northing, zone_number, zone_letter = from_latlon(float(lat), float(lon))
+            
+            self.dlg.lineEdit_50.setText(str(easting))
+            self.dlg.lineEdit_52.setText(str(northing))
+            self.dlg.lineEdit_49.setText(str(zone_number))
+            self.dlg.lineEdit_51.setText(str(zone_letter))
+        except Exception as e:
+            print(e)
 
-        self.dlg.lineEdit_50.setText(str(easting))
-        self.dlg.lineEdit_52.setText(str(northing))
-        self.dlg.lineEdit_49.setText(str(zone_number))
-        self.dlg.lineEdit_51.setText(str(zone_letter))
+        
 
     def clear_dms_to_utm(self):
         self.dlg.lineEdit_47.clear() 
@@ -421,19 +446,25 @@ class CoordsConverter:
     # START DMS to DD
     ###
     def dms_to_dd(self):
-        lat = [self.dlg.lineEdit_95.text(), self.dlg.lineEdit_99.text(), self.dlg.lineEdit_97.text()]
-        for i in lat:
-            float(i)
+        try:
+            lat = [self.dlg.lineEdit_95.text(), self.dlg.lineEdit_99.text(), self.dlg.lineEdit_97.text()]
+            for i in lat:
+                float(i)
 
-        lon = [self.dlg.lineEdit_98.text(), self.dlg.lineEdit_96.text(), self.dlg.lineEdit_100.text()]
-        for i in lon:
-            float(i)
+            lon = [self.dlg.lineEdit_98.text(), self.dlg.lineEdit_96.text(), self.dlg.lineEdit_100.text()]
+            for i in lon:
+                float(i)
 
-        # convert from dms to dd
-        lat, lon = coordsConverter.dms_to_dm(self, lat, lon)
+            # convert from dms to dd
+            lat, lon = dms_to_dm(lat, lon)
+            
+            self.dlg.lineEdit_93.setText(str(lat))
+            self.dlg.lineEdit_94.setText(str(lon))
+        except Exception as e:
+            print(e)
+            
+        
 
-        self.dlg.lineEdit_93.setText(str(lat))
-        self.dlg.lineEdit_94.setText(str(lon))
 
     def clear_dms_to_dd(self):
         self.dlg.lineEdit_95.clear()
